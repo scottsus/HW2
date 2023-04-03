@@ -34,8 +34,6 @@
 #include <pthread.h>
 
 #define _XOPEN_SOURCE
-#include <time.h>
-char *strptime(const char *s, const char *format, struct tm *tm);
 
 typedef struct {
 	char *method;
@@ -84,9 +82,6 @@ char *get_header(const httpreq_t *req, const char* headername) {
 	strcat(searchstr, ": ");
 
 	if (hdrptr = strstr(req->headers, searchstr)) { 
-		if (strlen(hdrptr) > 1000)
-			return NULL;
-		
 		hdrptr += strlen(searchstr); 
 		if (hdrend = strstr(hdrptr, "\r\n")) { 
 			char hdrval[1024]; // temporary return value

@@ -1,0 +1,20 @@
+Security Flaw Memo
+
+There was one fundamental flaw with how a request header was processed, which impacted 2 types of requests.
+	First, for a POST request, a Content-Length with a value over 1024 bytes could be overflown.
+	Second, for a GET request, a If-Modified-Since with value over 1024 bytes could be overflown.
+
+For example,
+	POST /login HTTP/1.1
+	Content-Length: AAA... x2000
+would cause the get_header() function to overflow because the `hdrval` buffer could only hold 1024 bytes.
+
+To fix it, I just need to check that strlen(hdrptr) < 1020. If it was more than that then we'd return a NULL pointer. Realistically, request header values shouldn't be that long anyway.
+
+1. The breach was very serious because a single malicious request could cause cause the entire webserver to crash.
+2. The recovery plan was simple and good enough to fix the flaw. Now the webserver would respond with a 404 BAD REQUEST when a malicious GET request was sent.
+3. There may be other issues related to NULL pointer dereferences, will get the tech team to fix it ASAP.
+
+Your Tech Lead,
+Scott Susanto
+
