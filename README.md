@@ -24,7 +24,7 @@ make && ./webserver 8081
 Run the exploit script.
 ```
 ./exploit.sh
-8080
+8081
 ```
 We should get a 404 BAD REQUEST.
 
